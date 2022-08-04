@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>FinApp</title>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//cdn.datatables.net/1.12.1/css/dataTables.bootstrap4.min.css">
+</head>
+<body>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap4.min.js"></script>
+    <header class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <img src="download.png" alt="" width="36" height="30" class="d-inline-block align-text-top">
+                FinApp
+            </a>
+        </div>
+    </header>
+    <div class="container-md">
+        <div class="bg-light">
+        <h5 class="pt-4 pl-3">Account</h5>
+        <div class="row p-3">
+            <!--Balance Card-->
+            <div class="col-4">
+                <div class="card">
+                    <div class="card-header">
+                        Balance
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">Your current balance..</h5>
+                        <p class="card-text" th:text="${#numbers.formatCurrency(balTotal)}"></p>
+                        <a href="#" class="btn btn-primary">Adjust Balance</a>
+                    </div>
+                </div>
+            </div>
+            <!--Debits Card-->
+            <div class="col-4">
+                <div class="card">
+                    <div class="card-header">
+                        Debits
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">YTD Total..</h5>
+                        <p class="card-text" th:text="${#numbers.formatCurrency(debTotal)}"></p>
+                        <button class="btn btn-primary" data-toggle="modal" data-target="#debitModal">
+                            Add Debits
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <!--Credits Card-->
+            <div class="col-4">
+                <div class="card">
+                    <div class="card-header">
+                        Credits
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">YTD Total..</h5>
+                        <p class="card-text" th:text="${#numbers.formatCurrency(credTotal)}"></p>
+                        <button class="btn btn-primary" data-toggle="modal" data-target="#creditModal">
+                            Add Credits
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+            <div class="row p-3">
+                <!--Debits Table-->
+                <div class="col-6">
+                    <div class="card p-3">
+                        <table class="table table-sm overflow-auto" id="dtable">
+                        <thead class="thead-dark">
+                        <tr>
+                            <th scope="col" style="width: 20%">Date</th>
+                            <th scope="col" style="width: 45%">Company</th>
+                            <th scope="col" style="width: 15%">Amount</th>
+                            <th scope="col" style="width: 20%">Category</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:if="${#lists.isEmpty(debits)}">
+                            <td colspan="6">No Records found. Add some...!</td>
+                        </tr>
+                        <tr th:each="debit : ${debits}"><a href="@{/debit/update/{id}}"></a>
+                            <td th:text="${debit.date}"></td>
+                            <td th:text="${debit.company}"></td>
+                            <td class="text-right pr-4" th:text="${#numbers.formatCurrency(debit.amount)}"></td>
+                            <td th:text="${debit.type}"></td>
+                        </tbody>
+                    </table>
+                    </div>
+                </div>
+                <!--Credits Table-->
+                <div class="col-6">
+                    <div class="card p-3 overflow-auto">
+                        <table class="table table-sm" id="ctable">
+                        <thead class="thead-dark">
+                        <tr>
+                            <th scope="col" style="width: 20%">Date</th>
+                            <th scope="col" style="width: 25%">Company</th>
+                            <th scope="col" style="width: 15%">Amount</th>
+                            <th scope="col" style="width: 20%">Category</th>
+                            <th scope="col" style="width: 20%">Actions</th>
+                         </tr>
+                        </thead>
+                        <tbody>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(credits)}">
+                            <td colspan="6">No Records found. Add some...!</td>
+                        </tr>
+                        <tr th:each="credit : ${credits}">
+                            <td th:text="${credit.date}"></td>
+                            <td th:text="${credit.company}"></td>
+                            <td class="text-right pr-4" th:text="${#numbers.formatCurrency(credit.amount)}"></td>
+                            <td th:text="${credit.category}"></td>
+                            <td>
+                                <a th:href="@{credit/update/{id}(id=${credit.id})}" class="btn-btn-primary">Edit</a>
+                                <a th:href="@{credit/delete/{id}(id=${credit.id})}" class="btn-btn-primary pl-2">Delete</a>
+                            </td>
+                        </tr>
+                        </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<!--Debit Modal-->
+    <div class="modal fade" id="debitModal" tabindex="-1" role="dialog" aria-labelledby="debitModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="debitModalLabel">Add Debit</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="debForm" method="post" th:action="@{/debit/}" th:object="${debit}" class="col card p-3 mb-5">
+                        <div class="form-group">
+                            <label for="date">Date</label>
+                            <input id="date" required type="date" th:field="*{date}"
+                                   class="form-control"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="company">Company</label>
+                            <input id="company" placeholder="Enter Company Name" required type="text" th:field="*{company}"
+                                   class="form-control"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="amount">Amount</label>
+                            <input id="amount" placeholder="Enter an Amount" required type="number" th:field="*{amount}"
+                                   class="form-control"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="type">Category</label>
+                            <select id="type" required th:field="*{type}" class="form-control">
+                                <option value="" hidden>Select a Category</option>
+                                <option th:each="type : ${T(com.Finance.FinApp.models.debit.Type).values()}"
+                                        th:value="${type}"
+                                        th:text="${type}">
+                                </option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" form="debForm" class="btn btn-primary">Submit</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+<!--                    <button type="button" class="btn btn-primary">Save changes</button>-->
+                </div>
+            </div>
+        </div>
+    </div>
+<!--Credit Modal-->
+    <div class="modal fade" id="creditModal" tabindex="-1" role="dialog" aria-labelledby="creditModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Add Credit</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="credForm" method="post" th:action="@{/credit/}" th:object="${credit}" class="col card p-3 mb-5">
+                        <div class="form-group">
+                            <label for="dateCred">Date</label>
+                            <input id="dateCred" required type="date" th:field="*{date}"
+                                   class="form-control"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="companyCred">Company</label>
+                            <input id="companyCred" placeholder="Enter Company Name" required type="text" th:field="*{company}"
+                                   class="form-control"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="amountCred">Amount</label>
+                            <input id="amountCred" placeholder="Enter an Amount" required type="number" th:field="*{amount}"
+                                   class="form-control"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="category">Category</label>
+                            <select id="category" required th:field="*{category}" class="form-control">
+                                <option value="" hidden>Select a Category</option>
+                                <option th:each="category : ${T(com.Finance.FinApp.models.credit.Category).values()}"
+                                        th:value="${category}"
+                                        th:text="${category}">
+                                </option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" form="credForm" class="btn btn-primary">Submit</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+<script>
+$(document).ready(function () {
+$('#ctable').DataTable();
+});
+$(document).ready(function () {
+$('#dtable').DataTable();
+});
+</script>
+</body>
+</html>
