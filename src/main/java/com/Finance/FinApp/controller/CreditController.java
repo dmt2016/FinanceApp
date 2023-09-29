@@ -5,12 +5,7 @@ import com.Finance.FinApp.service.CreditService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-
-import java.time.LocalDate;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/credit")
@@ -25,12 +20,16 @@ public class CreditController {
         return "redirect:/";
     }
 
-    @RequestMapping(value = "/update/{id}", method = RequestMethod.GET)
-    public String showUpdate(@PathVariable(value = "id") Long id, Model model) {
+    @RequestMapping(value = "/update")
+    @ResponseBody
+    public Credit showUpdate(Long id) {
+        return creditService.getCreditById(id);
+    }
 
-        Credit credit = creditService.getCreditById(id);
-        model.addAttribute("credit", credit);
-        return "credUpdate";
+    @RequestMapping(value = "/updated", method = {RequestMethod.PUT, RequestMethod.GET})
+    public String creditUpdate(Credit credit) {
+        creditService.updateCredit(credit);
+        return "redirect:/";
     }
 
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.GET)

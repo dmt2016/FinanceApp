@@ -3,7 +3,7 @@ package com.Finance.FinApp.models.debit;
 public enum Type {
     BILL,
     PERSONAL,
-    ENTERTAINMENT,
+    FUN,
     FOOD,
     CAR,
     HEALTH,

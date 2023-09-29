@@ -22,7 +22,7 @@ public class IndexController {
     private CreditService creditService;
 
     @RequestMapping(method = RequestMethod.GET)
-    public String getForm(Model model){
+    public String getIndex(Model model){
         List<Debit> debits = debitService.getDebits();
         List<Credit> credits = creditService.getCredits();
         Double debTotal = debitService.getYTDDebits();

@@ -1,9 +1,7 @@
 package com.Finance.FinApp.service;
 
-import com.Finance.FinApp.models.credit.Credit;
 import com.Finance.FinApp.models.debit.Debit;
 import com.Finance.FinApp.models.debit.DebitRepo;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -14,8 +12,12 @@ import java.util.Optional;
 public class DebitService {
 
     private List<Debit> debits;
-    @Autowired
-    private DebitRepo debitRepo;
+
+    private final DebitRepo debitRepo;
+
+    public DebitService(DebitRepo debitRepo){
+        this.debitRepo = debitRepo;
+    }
 
     public Debit createDebit(Debit debit){
         return debitRepo.save(debit);
@@ -43,7 +45,7 @@ public class DebitService {
     public List<Debit> getDebits(){ return debitRepo.findAll();}
 
     public Double getYTDDebits(){
-        Double sum = 0.0;
+        Double sum = Double.valueOf(0);
         int currYear = LocalDate.now().getYear();
         LocalDate startDate = LocalDate.of(currYear, 1, 1);
         LocalDate endDate = LocalDate.of(currYear,12,31);
