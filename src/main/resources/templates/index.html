@@ -7,92 +7,117 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>FinApp</title>
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.3/css/bootstrap.min.css">
-    <link rel="stylesheet" href="//cdn.datatables.net/1.12.1/css/dataTables.bootstrap4.min.css">
+<!--    <link rel="stylesheet" href="//cdn.datatables.net/1.12.1/css/dataTables.bootstrap4.min.css">-->
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<!--    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<!--    <script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap4.min.js"></script>-->
+
+
+<!--<script>
+$(document).ready(function () {
+$('#ctable').DataTable();
+});
+$(document).ready(function () {
+$('#dtable').DataTable();
+});
+</script>-->
+
 </head>
 <body>
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-<script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap4.min.js"></script>
-    <header class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">
-                <img src="download.png" alt="" width="36" height="30" class="d-inline-block align-text-top">
-                FinApp
-            </a>
-        </div>
-    </header>
+<!--    <header class="navbar navbar-expand-lg navbar-dark bg-dark">-->
+<!--        <div class="container-fluid">-->
+
+<!--        </div>-->
+<!--    </header>-->
     <div class="container-md">
+        <a class="navbar-brand col mb-4 mt-4" href="#">
+            <img src="download.png" alt="" width="36" height="30" class="d-inline-block align-text-top">
+            Finance App
+        </a>
         <div class="bg-light">
-        <h5 class="pt-4 pl-3">Account</h5>
-        <div class="row p-3">
-            <!--Balance Card-->
-            <div class="col-4">
-                <div class="card">
-                    <div class="card-header">
-                        Balance
+            <div class="row">
+            <h5 class="col-10 ml-4 pt-4 pl-3">Account</h5>
+            <a href="#" class="btn btn-primary mt-3">Create Budget</a>
+            </div>
+            <div class="row p-3">
+                <!--Balance Card-->
+                <div class="col-4">
+                    <div class="card">
+                        <div class="card-header">
+                            Balance
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">Your current balance..</h5>
+                            <p class="card-text" th:text="${#numbers.formatCurrency(balTotal)}"></p>
+                            <a href="#" class="btn btn-primary">Adjust Balance</a>
+                        </div>
                     </div>
-                    <div class="card-body">
-                        <h5 class="card-title">Your current balance..</h5>
-                        <p class="card-text" th:text="${#numbers.formatCurrency(balTotal)}"></p>
-                        <a href="#" class="btn btn-primary">Adjust Balance</a>
+                </div>
+                <!--Debits Card-->
+                <div class="col-4">
+                    <div class="card">
+                        <div class="card-header">
+                            Debits
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">YTD Total..</h5>
+                            <p class="card-text" th:text="${#numbers.formatCurrency(debTotal)}"></p>
+                            <button class="btn btn-primary" data-toggle="modal" data-target="#debitModal">
+                                Add Debits
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <!--Credits Card-->
+                <div class="col-4">
+                    <div class="card">
+                        <div class="card-header">
+                            Credits
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">YTD Total..</h5>
+                            <p class="card-text" th:text="${#numbers.formatCurrency(credTotal)}"></p>
+                            <button class="btn btn-primary" data-toggle="modal" data-target="#creditModal">
+                                Add Credits
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
-            <!--Debits Card-->
-            <div class="col-4">
-                <div class="card">
-                    <div class="card-header">
-                        Debits
-                    </div>
-                    <div class="card-body">
-                        <h5 class="card-title">YTD Total..</h5>
-                        <p class="card-text" th:text="${#numbers.formatCurrency(debTotal)}"></p>
-                        <button class="btn btn-primary" data-toggle="modal" data-target="#debitModal">
-                            Add Debits
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <!--Credits Card-->
-            <div class="col-4">
-                <div class="card">
-                    <div class="card-header">
-                        Credits
-                    </div>
-                    <div class="card-body">
-                        <h5 class="card-title">YTD Total..</h5>
-                        <p class="card-text" th:text="${#numbers.formatCurrency(credTotal)}"></p>
-                        <button class="btn btn-primary" data-toggle="modal" data-target="#creditModal">
-                            Add Credits
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
             <div class="row p-3">
                 <!--Debits Table-->
                 <div class="col-6">
                     <div class="card p-3">
+                        <div class="card-header pl-2">
+                            Debit Transactions
+                        </div>
                         <table class="table table-sm overflow-auto" id="dtable">
                         <thead class="thead-dark">
                         <tr>
-                            <th scope="col" style="width: 20%">Date</th>
-                            <th scope="col" style="width: 45%">Company</th>
-                            <th scope="col" style="width: 15%">Amount</th>
+                            <th scope="col" style="width: 25%">Date</th>
+                            <th scope="col" style="width: 20%">Company</th>
+                            <th scope="col" style="width: 10%">Amount</th>
                             <th scope="col" style="width: 20%">Category</th>
+                            <th scope="col" style="width: 25%">Action</th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr th:if="${#lists.isEmpty(debits)}">
-                            <td colspan="6">No Records found. Add some...!</td>
+                            <td colspan="6">No Records found. Add some...</td>
                         </tr>
-                        <tr th:each="debit : ${debits}"><a href="@{/debit/update/{id}}"></a>
+                        <tr th:each="debit : ${debits}"><a href="@{/debit/updated/{id}}"></a>
                             <td th:text="${debit.date}"></td>
                             <td th:text="${debit.company}"></td>
                             <td class="text-right pr-4" th:text="${#numbers.formatCurrency(debit.amount)}"></td>
                             <td th:text="${debit.type}"></td>
+                            <td>
+                                <a th:href="@{debit/update/(id=${debit.id})}" id="dbutton" class="pl-2">
+                                    Edit
+                                </a>
+                                <a th:href="@{debit/delete/{id}(id=${debit.id})}" class="pl-2">Delete</a>
+                            </td>
+                        </tr>
                         </tbody>
                     </table>
                     </div>
@@ -100,20 +125,23 @@
                 <!--Credits Table-->
                 <div class="col-6">
                     <div class="card p-3 overflow-auto">
+                        <div class="card-header pl-2">
+                            Credit Transactions
+                        </div>
                         <table class="table table-sm" id="ctable">
                         <thead class="thead-dark">
                         <tr>
-                            <th scope="col" style="width: 20%">Date</th>
-                            <th scope="col" style="width: 25%">Company</th>
-                            <th scope="col" style="width: 15%">Amount</th>
+                            <th scope="col" style="width: 25%">Date</th>
+                            <th scope="col" style="width: 20%">Company</th>
+                            <th scope="col" style="width: 10%">Amount</th>
                             <th scope="col" style="width: 20%">Category</th>
-                            <th scope="col" style="width: 20%">Actions</th>
+                            <th scope="col" style="width: 25%">Actions</th>
                          </tr>
                         </thead>
                         <tbody>
                         </tr>
                         <tr th:if="${#lists.isEmpty(credits)}">
-                            <td colspan="6">No Records found. Add some...!</td>
+                            <td colspan="6">No Records found. Add some...</td>
                         </tr>
                         <tr th:each="credit : ${credits}">
                             <td th:text="${credit.date}"></td>
@@ -121,8 +149,10 @@
                             <td class="text-right pr-4" th:text="${#numbers.formatCurrency(credit.amount)}"></td>
                             <td th:text="${credit.category}"></td>
                             <td>
-                                <a th:href="@{credit/update/{id}(id=${credit.id})}" class="btn-btn-primary">Edit</a>
-                                <a th:href="@{credit/delete/{id}(id=${credit.id})}" class="btn-btn-primary pl-2">Delete</a>
+                                <a th:href="@{credit/update/(id=${credit.id})}" id="cbutton" class="pl-2">
+                                    Edit
+                                </a>
+                                <a th:href="@{credit/delete/{id}(id=${credit.id})}" class="pl-2">Delete</a>
                             </td>
                         </tr>
                         </tbody>
@@ -156,7 +186,7 @@
                         </div>
                         <div class="form-group">
                             <label for="amount">Amount</label>
-                            <input id="amount" placeholder="Enter an Amount" required type="number" th:field="*{amount}"
+                            <input id="amount" step="0.01" placeholder="Enter an Amount" required type="number" th:field="*{amount}"
                                    class="form-control"/>
                         </div>
                         <div class="form-group">
@@ -203,7 +233,7 @@
                         </div>
                         <div class="form-group">
                             <label for="amountCred">Amount</label>
-                            <input id="amountCred" placeholder="Enter an Amount" required type="number" th:field="*{amount}"
+                            <input id="amountCred" step="0.01" placeholder="Enter an Amount" required type="number" th:field="*{amount}"
                                    class="form-control"/>
                         </div>
                         <div class="form-group">
@@ -225,12 +255,135 @@
             </div>
         </div>
     </div>
+<!--Credit Update Modal-->
+    <div class="modal fade" id="credUpModal" tabindex="-1" role="dialog" aria-labelledby="credUpModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModal2Label">Update Credit</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="credUpForm" method="put" th:action="@{/credit/updated}" th:object="${credit}" class="col card p-3 mb-5">
+                        <input id="idCredUp" type="hidden" th:field="*{id}" />
+                        <div class="form-group">
+                            <label for="dateCredUp">Date</label>
+                            <input id="dateCredUp" required type="date" th:field="*{date}"
+                                   class="form-control"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="companyCred">Company</label>
+                            <input id="companyCredUp" placeholder="Enter Company Name" required type="text" th:field="*{company}"
+                                   class="form-control"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="amountCred">Amount</label>
+                            <input id="amountCredUp" step="0.01" placeholder="Enter an Amount" required type="number" th:field="*{amount}"
+                                   class="form-control"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="categoryCredUp">Category</label>
+                            <select id="categoryCredUp" required th:field="*{category}" class="form-control">
+                                <option value="" hidden>Select a Category</option>
+                                <option th:each="category : ${T(com.Finance.FinApp.models.credit.Category).values()}"
+                                        th:value="${category}"
+                                        th:text="${category}">
+                                </option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" form="credUpForm" class="btn btn-primary">Submit</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+<!--Debit Update Modal-->
+    <div class="modal fade" id="debUpModal" tabindex="-1" role="dialog" aria-labelledby="debUpModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModal3Label">Update Credit</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="debUpForm" method="put" th:action="@{/debit/updated}" th:object="${debit}" class="col card p-3 mb-5">
+                        <input id="idDebUp" type="hidden" th:field="*{id}" />
+                        <div class="form-group">
+                            <label for="dateCredUp">Date</label>
+                            <input id="dateDebUp" required type="date" th:field="*{date}"
+                                   class="form-control"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="companyCred">Company</label>
+                            <input id="companyDebUp" placeholder="Enter Company Name" required type="text" th:field="*{company}"
+                                   class="form-control"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="amountCred">Amount</label>
+                            <input id="amountDebUp" step="0.01" placeholder="Enter an Amount" required type="number" th:field="*{amount}"
+                                   class="form-control"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="categoryDebUp">Category</label>
+                            <select id="categoryDebUp" required th:field="*{type}" class="form-control">
+                                <option value="" hidden>Select a Category</option>
+                                <option th:each="type : ${T(com.Finance.FinApp.models.debit.Type).values()}"
+                                        th:value="${type}"
+                                        th:text="${type}">
+                                </option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" form="debUpForm" class="btn btn-primary">Submit</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 <script>
-$(document).ready(function () {
-$('#ctable').DataTable();
+$(document).ready(function() {
+    $('#ctable #cbutton').on('click', function(event) {
+        event.preventDefault();
+
+        var href= $(this).attr('href');
+
+        $.get(href, function(credit, status){
+            $('#idCredUp').val(credit.id);
+            $('#dateCredUp').val(credit.date);
+            $('#companyCredUp').val(credit.company);
+            $('#amountCredUp').val(credit.amount);
+            $('#categoryCredUp').val(credit.category);
+        });
+
+        $('#credUpModal').modal();
+    });
 });
-$(document).ready(function () {
-$('#dtable').DataTable();
+
+$(document).ready(function() {
+    $('#dtable #dbutton').on('click', function(event) {
+        event.preventDefault();
+
+        var href= $(this).attr('href');
+
+        $.get(href, function(debit, status){
+            $('#idDebUp').val(debit.id);
+            $('#dateDebUp').val(debit.date);
+            $('#companyDebUp').val(debit.company);
+            $('#amountDebUp').val(debit.amount);
+            $('#categoryDebUp').val(debit.type);
+        });
+
+        $('#debUpModal').modal();
+    });
 });
 </script>
 </body>
