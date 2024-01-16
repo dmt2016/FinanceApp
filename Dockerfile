@@ -1,9 +1,7 @@
 FROM maven:3.8.5-openjdk-17 AS build
-WORKDIR /FinApp
-COPY pom.xml .
-COPY src ./src
+COPY . .
 RUN mvn clean package -DskipTests
-FROM openjdk
-WORKDIR /FinApp
-COPY --from=build FinApp/target/FinApp.jar .
-CMD ["java", "-jar", "FinApp.jar"]
+
+FROM openjdk:17.0.1-jdk-slim
+COPY --from=build /target/finapp-0.0.1-SNAPSHOT.jar finapp.jar
+CMD ["java", "-jar", "finapp.jar"]
