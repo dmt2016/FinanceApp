@@ -29,10 +29,11 @@ $('#dtable').DataTable();
 <!--        </div>-->
 <!--    </header>-->
     <div class="container">
-        <a class="navbar-brand col mb-4 mt-4" href="#">
-            <img src="download.png" alt="" width="36" height="30" class="d-inline-block align-text-top">
-            Finance App
-        </a>
+        <div  class="mt-5">
+            <a class="navbar-brand col" href="#">
+                <h4>Finance App</h4>
+            </a>
+        </div>
         <div class="bg-light">
             <div class="row m-3">
                 <h5 class="col-9 ml-4 pt-4 pl-3">Account</h5>
@@ -45,10 +46,17 @@ $('#dtable').DataTable();
                         <div class="card-header">
                             Balance
                         </div>
-                        <div class="card-body">
-                            <h5 class="card-title">Your current balance..</h5>
-                            <p class="card-text" th:text="${#numbers.formatCurrency(balTotal)}"></p>
-                            <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#messageModal">Adjust Balance</a>
+                        <div class="card-body" style="display: flex; justify-content: space-between">
+                            <div>
+                                <h5 class="card-title">Your current balance..</h5>
+                                <p class="card-text" th:if="${balTotal < 0}">
+                                    <span th:text="${#numbers.formatCurrency(balTotal)}" style="color: red"></span>
+                                </p>
+                                <p class="card-text" th:if="${balTotal > 0}" th:text="${#numbers.formatCurrency(balTotal)}">
+                                    <span th:text="${#numbers.formatCurrency(balTotal)}"></span>
+                                </p>
+<!--                                th:if="${#lists.isEmpty(debits)}"-->
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -60,10 +68,8 @@ $('#dtable').DataTable();
                         </div>
                         <div class="card-body">
                             <h5 class="card-title">YTD Total..</h5>
-                            <p class="card-text" th:text="${#numbers.formatCurrency(debTotal)}"></p>
-                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#debitModal">
-                                Add Debits
-                            </button>
+                            <p class="card-text" th:text="'('+${#numbers.formatCurrency(debTotal)}+')'"></p>
+
                         </div>
                     </div>
                 </div>
@@ -76,9 +82,6 @@ $('#dtable').DataTable();
                         <div class="card-body">
                             <h5 class="card-title">YTD Total..</h5>
                             <p class="card-text" th:text="${#numbers.formatCurrency(credTotal)}"></p>
-                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#creditModal">
-                                Add Credits
-                            </button>
                         </div>
                     </div>
                 </div>
@@ -87,30 +90,35 @@ $('#dtable').DataTable();
                 <!--Debits Table-->
                 <div class="col-6">
                     <div class="card p-3">
-                        <div class="card-header pl-2">
+                        <div class="card-header pl-2" style="display: flex; justify-content: space-between; align-items: end">
                             Debit Transactions
+                            <button class="btn btn-danger ml-6" data-bs-toggle="modal" data-bs-target="#debitModal"
+                                    style="border-radius: 50px; padding: .4rem 2rem">
+                                Add Debits
+                            </button>
                         </div>
+
                         <div class="table-responsive">
                             <table class="table table-sm overflow-auto" id="dtable">
                             <thead class="thead-dark">
                             <tr>
-                                <th scope="col" style="width: 25%">Date</th>
-                                <th scope="col" style="width: 20%">Company</th>
-                                <th scope="col" style="width: 10%">Amount</th>
-                                <th scope="col" style="width: 20%">Category</th>
-                                <th scope="col" style="width: 25%">Action</th>
+                                <th scope="col" style="width: 25%; padding: 1rem">Date</th>
+                                <th scope="col" style="width: 20%; padding: 1rem">Company</th>
+                                <th scope="col" style="width: 10%; padding: 1rem">Amount</th>
+                                <th scope="col" style="width: 20%; padding: 1rem">Category</th>
+                                <th scope="col" style="width: 25%; padding: 1rem">Action</th>
                             </tr>
                             </thead>
                             <tbody>
                             <tr th:if="${#lists.isEmpty(debits)}">
-                                <td colspan="6">No Records found. Add some...</td>
+                                <td colspan="6" style="padding: 1rem">No Records found.  Add some...</td>
                             </tr>
                             <tr th:each="debit : ${debits}"><a href="@{/debit/updated/{id}}"></a>
-                                <td th:text="${debit.date}"></td>
-                                <td th:text="${debit.company}"></td>
-                                <td class="text-right pr-4" th:text="${#numbers.formatCurrency(debit.amount)}"></td>
-                                <td th:text="${debit.type}"></td>
-                                <td>
+                                <td th:text="${debit.date}" style="padding: 1rem"></td>
+                                <td th:text="${debit.company}" style="padding: 1rem"></td>
+                                <td class="text-right pr-4" th:text="${#numbers.formatCurrency(debit.amount)}" style="padding: 1rem"></td>
+                                <td th:text="${debit.type}" style="padding: 1rem"></td>
+                                <td style="padding: 1rem">
                                     <a th:href="@{debit/update/(id=${debit.id})}" id="dbutton">Edit</a>
                                     <a th:href="@{debit/delete/{id}(id=${debit.id})}">Delete</a>
                                 </td>
@@ -123,31 +131,35 @@ $('#dtable').DataTable();
                 <!--Credits Table-->
                 <div class="col-6">
                     <div class="card p-3 overflow-auto">
-                        <div class="card-header pl-2">
+                        <div class="card-header pl-2" style="display: flex; justify-content: space-between; align-items: end">
                             Credit Transactions
+                            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#creditModal"
+                                    style="border-radius: 50px; padding: .4rem 2rem">
+                                Add Credits
+                            </button>
                         </div>
                         <div class="table-responsive">
                         <table class="table table-sm" id="ctable">
                         <thead class="thead-dark">
                         <tr>
-                            <th scope="col" style="width: 25%">Date</th>
-                            <th scope="col" style="width: 20%">Company</th>
-                            <th scope="col" style="width: 10%">Amount</th>
-                            <th scope="col" style="width: 20%">Category</th>
-                            <th scope="col" style="width: 25%">Actions</th>
+                            <th scope="col" style="width: 22%; padding: 1rem">Date</th>
+                            <th scope="col" style="width: 25%; padding: 1rem">Company</th>
+                            <th scope="col" style="width: 8%; padding: 1rem">Amount</th>
+                            <th scope="col" style="width: 20%; padding: 1rem">Category</th>
+                            <th scope="col" style="width: 25%; padding: 1rem">Actions</th>
                          </tr>
                         </thead>
                         <tbody>
                         </tr>
                         <tr th:if="${#lists.isEmpty(credits)}">
-                            <td colspan="6">No Records found. Add some...</td>
+                            <td colspan="6" style="padding: 1rem">No Records found.  Add some...</td>
                         </tr>
                         <tr th:each="credit : ${credits}">
-                            <td th:text="${credit.date}"></td>
-                            <td th:text="${credit.company}"></td>
-                            <td class="text-right pr-4" th:text="${#numbers.formatCurrency(credit.amount)}"></td>
-                            <td th:text="${credit.category}"></td>
-                            <td>
+                            <td th:text="${credit.date}" style="padding: 1rem"></td>
+                            <td th:text="${credit.company}" style="padding: 1rem"></td>
+                            <td class="text-right pr-4" th:text="${#numbers.formatCurrency(credit.amount)}" style="padding: 1rem"></td>
+                            <td th:text="${credit.category}" style="padding: 1rem"></td>
+                            <td style="padding: 1rem">
                                 <a th:href="@{credit/update/(id=${credit.id})}" id="cbutton">Edit</a>
                                 <a th:href="@{credit/delete/{id}(id=${credit.id})}">Delete</a>
                             </td>
@@ -173,22 +185,22 @@ $('#dtable').DataTable();
                 <div class="modal-body">
                     <form id="debForm" method="post" th:action="@{/debit/}" th:object="${debit}" class="col card p-3 mb-5">
                         <div class="form-group">
-                            <label for="date">Date</label>
+<!--                            <label for="date">Date</label>-->
                             <input id="date" required type="date" th:field="*{date}"
-                                   class="form-control"/>
+                                   class="form-control mb-3"/>
                         </div>
                         <div class="form-group">
-                            <label for="company">Company</label>
+<!--                            <label for="company">Company</label>-->
                             <input id="company" placeholder="Enter Company Name" required type="text" th:field="*{company}"
-                                   class="form-control"/>
+                                   class="form-control mb-3"/>
                         </div>
                         <div class="form-group">
-                            <label for="amount">Amount</label>
+<!--                            <label for="amount">Amount</label>-->
                             <input id="amount" step="0.01" placeholder="Enter an Amount" required type="number" th:field="*{amount}"
-                                   class="form-control"/>
+                                   class="form-control mb-3"/>
                         </div>
                         <div class="form-group">
-                            <label for="type">Category</label>
+<!--                            <label for="type">Category</label>-->
                             <select id="type" required th:field="*{type}" class="form-control">
                                 <option value="" hidden>Select a Category</option>
                                 <option th:each="type : ${T(com.Finance.FinApp.models.debit.Type).values()}"
@@ -220,22 +232,22 @@ $('#dtable').DataTable();
                 <div class="modal-body">
                     <form id="credForm" method="post" th:action="@{/credit/}" th:object="${credit}" class="col card p-3 mb-5">
                         <div class="form-group">
-                            <label for="dateCred">Date</label>
+<!--                            <label for="dateCred">Date</label>-->
                             <input id="dateCred" required type="date" th:field="*{date}"
-                                   class="form-control"/>
+                                   class="form-control mb-3"/>
                         </div>
                         <div class="form-group">
-                            <label for="companyCred">Company</label>
+<!--                            <label for="companyCred">Company</label>-->
                             <input id="companyCred" placeholder="Enter Company Name" required type="text" th:field="*{company}"
-                                   class="form-control"/>
+                                   class="form-control mb-3"/>
                         </div>
                         <div class="form-group">
-                            <label for="amountCred">Amount</label>
+<!--                            <label for="amountCred">Amount</label>-->
                             <input id="amountCred" step="0.01" placeholder="Enter an Amount" required type="number" th:field="*{amount}"
-                                   class="form-control"/>
+                                   class="form-control mb-3"/>
                         </div>
                         <div class="form-group">
-                            <label for="category">Category</label>
+<!--                            <label for="category">Category</label>-->
                             <select id="category" required th:field="*{category}" class="form-control">
                                 <option value="" hidden>Select a Category</option>
                                 <option th:each="category : ${T(com.Finance.FinApp.models.credit.Category).values()}"
